@@ -1,1 +1,5 @@
-<h1>Noteman</h1>
+<script>
+	import Sidebar from "$lib/Sidebar.svelte";
+</script>
+
+<Sidebar />

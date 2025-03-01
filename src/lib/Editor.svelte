@@ -1,0 +1,239 @@
+<script lang="ts">
+	import type { Note } from "./types";
+
+	export let note: Note;
+</script>
+
+<svelte:head>
+	<title>{note.title}</title>
+</svelte:head>
+
+<header
+	class="fixed shadow-sm container flex h-14 flex-none items-center justify-between gap-4 px-3"
+>
+	<div class="flex flex-1 items-center gap-1 overflow-hidden">
+		<div class="flex h-6 flex-grow items-center overflow-hidden">
+			<h2 class="truncate text-lg text-gray-600 font-semibold">
+				{note.title}
+			</h2>
+		</div>
+	</div>
+
+	<div class="flex select-none items-center gap-2">
+		<div class="flex items-center gap-1.5">
+			<span
+				><button
+					aria-label="Undo"
+					class="h-10 rounded-lg px-2 focus-visible:outline-0"
+					><svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						class="icon-xl-heavy"
+						><path
+							d="M21 13.6647C21 14.9442 20.7333 16.0559 20.1996 17C19.666 17.9503 18.8997 18.6863 17.9008 19.208C16.908 19.736 15.7198 20 14.3361 20H12.0372C11.696 20 11.4137 19.8851 11.1902 19.6553C10.9669 19.4317 10.8553 19.1584 10.8553 18.8354C10.8553 18.5124 10.9669 18.2391 11.1902 18.0155C11.4137 17.792 11.696 17.6801 12.0372 17.6801H14.2245C15.18 17.6801 15.9897 17.5032 16.6535 17.1491C17.3237 16.795 17.8325 16.3136 18.1799 15.7049C18.5336 15.0901 18.7105 14.3851 18.7105 13.5901C18.7105 12.8075 18.5336 12.1118 18.1799 11.5031C17.8325 10.8944 17.3237 10.4193 16.6535 10.0776C15.9897 9.73607 15.18 9.56516 14.2245 9.56516H8.64014L5.3268 9.41619L5.70838 8.80125L8.05379 10.7577L10.2316 12.8819C10.331 12.9876 10.4116 13.1056 10.4737 13.236C10.5419 13.3664 10.5761 13.5187 10.5761 13.6926C10.5761 14.0155 10.4705 14.2826 10.2596 14.4938C10.0549 14.705 9.78176 14.8106 9.44056 14.8106C9.13032 14.8106 8.85421 14.6894 8.61223 14.4472L3.36299 9.25782C3.2451 9.1522 3.15513 9.0249 3.09307 8.8758C3.03103 8.72056 3 8.56519 3 8.40995C3 8.24845 3.03103 8.09321 3.09307 7.94411C3.15513 7.78888 3.2451 7.65531 3.36299 7.54342L8.61223 2.35404C8.85421 2.11801 9.13032 2 9.44056 2C9.78176 2 10.0549 2.1056 10.2596 2.31678C10.4705 2.52175 10.5761 2.78572 10.5761 3.1087C10.5761 3.28261 10.5419 3.4379 10.4737 3.57454C10.4116 3.70497 10.331 3.82299 10.2316 3.92857L8.05379 6.0528L5.70838 8.00926L5.3268 7.39445L8.64014 7.24535H14.2245C15.6267 7.24535 16.8335 7.51548 17.8449 8.05587C18.8624 8.59626 19.6412 9.35091 20.1811 10.3199C20.727 11.2826 21 12.3976 21 13.6647Z"
+							fill="currentColor"
+							style="--darkreader-inline-fill: currentColor;"
+							data-darkreader-inline-fill=""
+						></path></svg
+					></button
+				></span
+			><span
+				><button
+					aria-label="Redo"
+					class="h-10 rounded-lg px-2 focus-visible:outline-0"
+					><svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						class="icon-xl-heavy"
+						><path
+							d="M3 13.6647C3 12.3976 3.26992 11.2826 3.80973 10.3199C4.35574 9.35091 5.13444 8.59626 6.14582 8.05587C7.16341 7.51548 8.37334 7.24535 9.77563 7.24535H15.3506L18.6732 7.39445L18.2917 8.00926L15.937 6.0528L13.7684 3.92857C13.6629 3.82299 13.576 3.70497 13.5078 3.57454C13.4457 3.4379 13.4147 3.28261 13.4147 3.1087C13.4147 2.78572 13.517 2.52175 13.7218 2.31678C13.9328 2.1056 14.209 2 14.5501 2C14.8666 2 15.1427 2.11801 15.3785 2.35404L20.637 7.54342C20.7549 7.65531 20.8449 7.78888 20.907 7.94411C20.969 8.09321 21 8.24845 21 8.40995C21 8.56519 20.969 8.72056 20.907 8.8758C20.8449 9.0249 20.7549 9.1522 20.637 9.25782L15.3785 14.4472C15.1427 14.6894 14.8666 14.8106 14.5501 14.8106C14.209 14.8106 13.9328 14.705 13.7218 14.4938C13.517 14.2826 13.4147 14.0155 13.4147 13.6926C13.4147 13.5187 13.4457 13.3664 13.5078 13.236C13.576 13.1056 13.6629 12.9876 13.7684 12.8819L15.937 10.7577L18.2917 8.80125L18.6732 9.41619L15.3506 9.56516H9.77563C8.82007 9.56516 8.00726 9.73607 7.33714 10.0776C6.66702 10.4193 6.15513 10.8944 5.80146 11.5031C5.45399 12.1118 5.28026 12.8075 5.28026 13.5901C5.28026 14.3851 5.45399 15.0901 5.80146 15.7049C6.15513 16.3136 6.66702 16.795 7.33714 17.1491C8.00726 17.5032 8.82007 17.6801 9.77563 17.6801H11.9627C12.3041 17.6801 12.5833 17.792 12.8005 18.0155C13.0238 18.2391 13.1355 18.5124 13.1355 18.8354C13.1355 19.1584 13.0238 19.4317 12.8005 19.6553C12.5833 19.8851 12.3041 20 11.9627 20H9.66399C8.28026 20 7.08895 19.736 6.08999 19.208C5.09722 18.6863 4.33403 17.9503 3.80043 17C3.26681 16.0559 3 14.9442 3 13.6647Z"
+							fill="currentColor"
+							style="--darkreader-inline-fill: currentColor;"
+							data-darkreader-inline-fill=""
+						></path></svg
+					></button
+				></span
+			>
+		</div>
+		<span class="" data-state="closed"
+			><button
+				aria-label="Copy"
+				class="h-10 rounded-lg px-2 focus-visible:outline-0"
+				><svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon-xl-heavy"
+					><path
+						fill-rule="evenodd"
+						clip-rule="evenodd"
+						d="M7 5C7 3.34315 8.34315 2 10 2H19C20.6569 2 22 3.34315 22 5V14C22 15.6569 20.6569 17 19 17H17V19C17 20.6569 15.6569 22 14 22H5C3.34315 22 2 20.6569 2 19V10C2 8.34315 3.34315 7 5 7H7V5ZM9 7H14C15.6569 7 17 8.34315 17 10V15H19C19.5523 15 20 14.5523 20 14V5C20 4.44772 19.5523 4 19 4H10C9.44772 4 9 4.44772 9 5V7ZM5 9C4.44772 9 4 9.44772 4 10V19C4 19.5523 4.44772 20 5 20H14C14.5523 20 15 19.5523 15 19V10C15 9.44772 14.5523 9 14 9H5Z"
+						fill="currentColor"
+						style="--darkreader-inline-fill: currentColor;"
+						data-darkreader-inline-fill=""
+					></path></svg
+				></button
+			></span
+		>
+	</div>
+</header>
+
+<main
+	class="relative mt-14 flex min-h-0 flex-auto flex-grow flex-col overflow-auto"
+>
+	<div class="block h-full w-full">
+		<div
+			class="flex mx-[36px] pt-[72px] h-full justify-center"
+			style="will-change: auto;"
+		>
+			<div class="z-0 flex w-full flex-col items-center">
+				<div
+					class="relative z-10 flex max-w-full h-fit"
+					style="padding-bottom: max(3rem, 24vh);"
+				>
+					<div
+						class="h-full z-10 contain-inline-size focus:outline-none bg-transparent"
+						style="width: 680px;"
+					>
+						<!-- Editor -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+<style>
+	.tiptap {
+		h1 {
+			font-size: 3rem;
+			font-weight: 800;
+			margin: 0;
+		}
+		h2 {
+			font-size: 2.25rem;
+			font-weight: 800;
+			margin: 0;
+		}
+		h3 {
+			font-size: 1.875rem;
+			font-weight: 800;
+			margin: 0;
+		}
+		h4 {
+			font-size: 1.5rem;
+			font-weight: 800;
+			margin: 0;
+		}
+		h5 {
+			font-size: 1.25rem;
+			font-weight: 800;
+			margin: 0;
+		}
+		h6 {
+			font-size: 1.125rem;
+			font-weight: 800;
+			margin: 0;
+		}
+
+		.dark h1,
+		.dark h2,
+		.dark h3,
+		.dark h4,
+		.dark h5,
+		.dark h6 {
+			color: #ffffff;
+		}
+
+		hr {
+			height: 1px;
+			margin: 2rem 0;
+			background-color: #e5e7eb;
+			border: none;
+		}
+		.dark hr {
+			background-color: #374151;
+		}
+
+		p {
+			margin-bottom: 0.75rem;
+			color: #4b5563;
+		}
+		.dark p {
+			color: #9ca3af;
+		}
+
+		blockquote {
+			padding: 1rem;
+			margin: 1rem 0;
+			border-left: 5px solid #d1d5db;
+			background-color: #f9fafb;
+		}
+		.dark blockquote {
+			border-left-color: #6b7280;
+			background-color: #1f2937;
+		}
+		blockquote p {
+			font-size: 1.25rem;
+			font-style: italic;
+			font-weight: 500;
+			line-height: 1.625;
+			color: #111827;
+		}
+		.dark blockquote p {
+			color: #ffffff;
+		}
+
+		img {
+			height: auto;
+			max-width: 100%;
+		}
+
+		ul {
+			list-style-type: disc;
+			list-style-position: inside;
+			color: #6b7280;
+			padding-left: 1rem;
+		}
+		ul li + li {
+			margin-top: 0.25rem;
+		}
+		.dark ul {
+			color: #9ca3af;
+		}
+
+		ol {
+			max-width: 28rem;
+			list-style-type: decimal;
+			list-style-position: inside;
+			color: #6b7280;
+			padding-left: 1rem;
+		}
+		ol li + li {
+			margin-top: 0.25rem;
+		}
+		.dark ol {
+			color: #9ca3af;
+		}
+
+		a {
+			font-weight: 500;
+			color: #2563eb;
+			text-decoration: none;
+		}
+		a:hover {
+			text-decoration: underline;
+		}
+		.dark a {
+			color: #3b82f6;
+		}
+	}
+</style>
