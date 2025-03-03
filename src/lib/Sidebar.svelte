@@ -44,7 +44,7 @@
 
 <aside
 	id="default-sidebar"
-	class="fixed top-0 left-0 z-40 w-88 h-screen transition-transform duration-300 ease-in-out"
+	class="fixed top-0 left-0 z-40 w-full md:w-88 md:translate-x-0 h-screen transition-transform duration-300 ease-in-out"
 	class:translate-x-0={$isSidebarOpen}
 	class:-translate-x-full={!$isSidebarOpen}
 	aria-label="Sidebar"
