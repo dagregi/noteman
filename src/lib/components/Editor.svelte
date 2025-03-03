@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Note } from "./types";
+	import type { Note } from "$lib/types";
+	import { TiptapEditor } from "./tiptap";
 
 	export let note: Note;
 </script>
@@ -103,137 +104,10 @@
 						class="h-full z-10 contain-inline-size focus:outline-none bg-transparent"
 						style="width: 680px;"
 					>
-						<!-- Editor -->
+						<TiptapEditor content={note.content ?? ""} />
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </main>
-
-<style>
-	.tiptap {
-		h1 {
-			font-size: 3rem;
-			font-weight: 800;
-			margin: 0;
-		}
-		h2 {
-			font-size: 2.25rem;
-			font-weight: 800;
-			margin: 0;
-		}
-		h3 {
-			font-size: 1.875rem;
-			font-weight: 800;
-			margin: 0;
-		}
-		h4 {
-			font-size: 1.5rem;
-			font-weight: 800;
-			margin: 0;
-		}
-		h5 {
-			font-size: 1.25rem;
-			font-weight: 800;
-			margin: 0;
-		}
-		h6 {
-			font-size: 1.125rem;
-			font-weight: 800;
-			margin: 0;
-		}
-
-		.dark h1,
-		.dark h2,
-		.dark h3,
-		.dark h4,
-		.dark h5,
-		.dark h6 {
-			color: #ffffff;
-		}
-
-		hr {
-			height: 1px;
-			margin: 2rem 0;
-			background-color: #e5e7eb;
-			border: none;
-		}
-		.dark hr {
-			background-color: #374151;
-		}
-
-		p {
-			margin-bottom: 0.75rem;
-			color: #4b5563;
-		}
-		.dark p {
-			color: #9ca3af;
-		}
-
-		blockquote {
-			padding: 1rem;
-			margin: 1rem 0;
-			border-left: 5px solid #d1d5db;
-			background-color: #f9fafb;
-		}
-		.dark blockquote {
-			border-left-color: #6b7280;
-			background-color: #1f2937;
-		}
-		blockquote p {
-			font-size: 1.25rem;
-			font-style: italic;
-			font-weight: 500;
-			line-height: 1.625;
-			color: #111827;
-		}
-		.dark blockquote p {
-			color: #ffffff;
-		}
-
-		img {
-			height: auto;
-			max-width: 100%;
-		}
-
-		ul {
-			list-style-type: disc;
-			list-style-position: inside;
-			color: #6b7280;
-			padding-left: 1rem;
-		}
-		ul li + li {
-			margin-top: 0.25rem;
-		}
-		.dark ul {
-			color: #9ca3af;
-		}
-
-		ol {
-			max-width: 28rem;
-			list-style-type: decimal;
-			list-style-position: inside;
-			color: #6b7280;
-			padding-left: 1rem;
-		}
-		ol li + li {
-			margin-top: 0.25rem;
-		}
-		.dark ol {
-			color: #9ca3af;
-		}
-
-		a {
-			font-weight: 500;
-			color: #2563eb;
-			text-decoration: none;
-		}
-		a:hover {
-			text-decoration: underline;
-		}
-		.dark a {
-			color: #3b82f6;
-		}
-	}
-</style>
