@@ -5,12 +5,24 @@
 		closeSidebar,
 	} from "$lib/stores/sidebar";
 	import Editor from "./Editor.svelte";
-	import type { Note } from "$lib/types";
+	import type { Note } from "$lib/models";
+	import { onMount } from "svelte";
 
-	var notes: Note[] = [
-		{ id: "note-1", title: "State of Matter", content: "2025-02-28" },
-		{ id: "note-2", title: "Morality and Ethics", content: "2025-02-28" },
-	];
+	let notes: Note[] = $state([]);
+	let selectedNote: Note | null = $state(null);
+	let showModal: boolean = $state(false);
+
+	onMount(async () => {
+		const response = await fetch("/api/notes");
+		notes = await response.json();
+		if (notes.length > 0) {
+			selectedNote = notes[0];
+		}
+	});
+
+	function selectNote(note: Note) {
+		selectedNote = note;
+	}
 </script>
 
 <div class="flex justify-between my-2 sm:hidden">
@@ -20,7 +32,7 @@
 		aria-controls="default-sidebar"
 		type="button"
 		class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-		on:click={toggleSidebar}
+		onclick={toggleSidebar}
 	>
 		<span class="sr-only">Open sidebar</span>
 		<svg
@@ -65,7 +77,7 @@
 			<button
 				class="inline-flex items-center text-sm p-2 text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 				aria-label="Close Sidebar"
-				on:click={toggleSidebar}
+				onclick={toggleSidebar}
 			>
 				<svg
 					class="w-5 h-5"
@@ -83,6 +95,7 @@
 			type="button"
 			aria-label="New Note"
 			class="flex w-full items-center justify-center p-2 my-6 text-gray-900 rounded-lg bg-gray-100 shadow dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group"
+			onclick={() => (showModal = !showModal)}
 		>
 			<svg
 				class="w-6 h-6 text-gray-700 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -103,6 +116,10 @@
 					<a
 						href="#{note.id}"
 						class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+						onclick={() => {
+							selectNote(note);
+							toggleSidebar();
+						}}
 					>
 						<span class="ms-3 truncate">{note.title}</span>
 					</a>
@@ -114,7 +131,7 @@
 
 <div
 	class="absolute left-0 z-20 overflow-hidden transition-shadow rounded-none shadow-[0_0px_18px_rgba(0,0,0,0.075)] opacity-100 will-change-auto w-full translate-x-0 h-full md:h-[1000px] md:w-[calc(100vw-400px)] md:translate-x-[400px]"
-	on:click={closeSidebar}
+	onclick={closeSidebar}
 >
 	<div
 		class="h-full overflow-hidden border-l border-gray-100 rounded-none will-change-auto"
@@ -125,7 +142,9 @@
 				draggable="false"
 			></div>
 			<section class="flex h-full w-full flex-col">
-				<Editor note={notes[0]} />
+				{#if selectedNote}
+					<Editor note={selectedNote} />
+				{/if}
 			</section>
 		</div>
 	</div>

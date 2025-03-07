@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Note } from "$lib/types";
+	import type { Note } from "$lib/models";
 	import { TiptapEditor } from "./tiptap";
 
 	export let note: Note;
@@ -104,7 +104,7 @@
 						class="h-full z-10 contain-inline-size focus:outline-none bg-transparent"
 						style="width: 680px;"
 					>
-						<TiptapEditor content={note.content ?? ""} />
+						<TiptapEditor content={note.content} />
 					</div>
 				</div>
 			</div>
