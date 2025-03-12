@@ -10,9 +10,9 @@ export const POST: RequestHandler = async ({ request }) => {
     try {
         const data = await request.json();
         const { title, content } = data;
-        if (!title || !content) {
+        if (!title) {
             return new Response(
-                JSON.stringify({ message: "Missing title or content" }),
+                JSON.stringify({ message: "Missing title" }),
                 { status: 400 },
             );
         }

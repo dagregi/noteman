@@ -6,11 +6,14 @@
 	} from "$lib/stores/sidebar";
 	import Editor from "./Editor.svelte";
 	import type { Note } from "$lib/models";
-	import { onMount } from "svelte";
+	import { onMount, tick } from "svelte";
 
 	let notes: Note[] = $state([]);
 	let selectedNote: Note | null = $state(null);
+
 	let showModal: boolean = $state(false);
+	let newNoteTitle: string = $state("");
+	let inputRef: HTMLInputElement | null = $state(null);
 
 	onMount(async () => {
 		const response = await fetch("/api/notes");
@@ -22,6 +25,43 @@
 
 	function selectNote(note: Note) {
 		selectedNote = note;
+	}
+
+	async function createNote() {
+		if (newNoteTitle.trim() === "") return;
+		const newNote: Note = {
+			title: newNoteTitle,
+			content: "",
+		};
+
+		notes = [newNote, ...notes];
+		const response = await fetch("/api/notes", {
+			method: "POST",
+			body: JSON.stringify(newNote),
+		});
+		console.log(response.ok);
+
+		selectedNote = newNote;
+		newNoteTitle = "";
+		showModal = false;
+	}
+
+	async function deleteNote(note: Note) {
+		notes = notes.filter((n) => n.id !== note.id);
+		if (selectedNote && selectedNote.id === note.id) {
+			selectedNote = notes.length > 0 ? notes[0] : null;
+		}
+
+		const response = await fetch(`/api/notes/${note.id}`, {
+			method: "DELETE",
+		});
+		console.log(response.ok);
+	}
+
+	async function openModal() {
+		showModal = true;
+		await tick();
+		inputRef?.focus();
 	}
 </script>
 
@@ -93,9 +133,11 @@
 		</div>
 		<button
 			type="button"
-			aria-label="New Note"
+			data-modal-target="add-note-modal"
+			data-modal-toggle="add-note-modal"
+			aria-label="Add New Note"
 			class="flex w-full items-center justify-center p-2 my-6 text-gray-900 rounded-lg bg-gray-100 shadow dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group"
-			onclick={() => (showModal = !showModal)}
+			onclick={openModal}
 		>
 			<svg
 				class="w-6 h-6 text-gray-700 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -112,16 +154,35 @@
 
 		<ul class="space-y-2 font-medium">
 			{#each notes as note}
-				<li>
+				<li class="group flex items-center">
 					<a
 						href="#{note.id}"
-						class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+						class="flex-1 flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
 						onclick={() => {
 							selectNote(note);
 							toggleSidebar();
 						}}
 					>
 						<span class="ms-3 truncate">{note.title}</span>
+						<button
+							aria-label="Delete Note"
+							class="invisible group-hover:visible text-red-500 mr-2"
+							onclick={(e) => {
+								e.stopPropagation();
+								deleteNote(note);
+							}}
+						>
+							<svg
+								class="w-6 h-6 text-gray-700 hover:text-red-700 dark:text-gray-400"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"
+								></path>
+							</svg>
+						</button>
 					</a>
 				</li>
 			{/each}
@@ -149,3 +210,82 @@
 		</div>
 	</div>
 </div>
+
+{#if showModal}
+	<div
+		id="add-note-modal"
+		tabindex="-1"
+		aria-hidden="true"
+		class="fixed inset-0 flex items-center justify-center bg-black opacity-60 z-50"
+	>
+		<div class="bg-white p-4 rounded shadow z-60">
+			<div class="flex items-center justify-between px-1 mb-2">
+				<h2 class="text-xl mb-2">Create Note</h2>
+				<button
+					type="button"
+					class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+					data-modal-hide="new-note-modal"
+					onclick={() => (showModal = false)}
+				>
+					<svg
+						class="w-3 h-3"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 14 14"
+					>
+						<path
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+						/>
+					</svg>
+					<span class="sr-only">Close modal</span>
+				</button>
+			</div>
+			<div
+				class="m-0 flex h-10 w-fit min-w-0 flex-shrink items-center rounded-lg bg-gray-100 shadow-lg p-1"
+			>
+				<input
+					type="text"
+					bind:this={inputRef}
+					bind:value={newNoteTitle}
+					placeholder="Note Title"
+					class="flex-1 bg-transparent outline-none text-sm px-2 w-64"
+					onkeydown={(e) => {
+						if (e.key === "Enter") {
+							createNote();
+						} else if (e.key === "Escape") {
+							showModal = false;
+						}
+					}}
+				/>
+				<button
+					type="button"
+					class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+					data-modal-hide="new-note-modal"
+					onclick={createNote}
+				>
+					<svg
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						class="w-6 h-6"
+						aria-hidden="true"
+						viewBox="0 0 24 24"
+					>
+						<path
+							d="M6 12H18M18 12L13 7M18 12L13 17"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						></path>
+					</svg>
+					<span class="sr-only">Create note</span>
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
