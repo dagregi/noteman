@@ -11,36 +11,32 @@
 	export let note: Note;
 	let editor: Editor;
 	let element: HTMLDivElement;
-
 	let updateTimeout: ReturnType<typeof setTimeout>;
 
-	// Function to send updated content to your endpoint.
-	function saveContent() {
-		const updatedContent = editor.getHTML();
-		fetch(`/api/notes/${note.id}`, {
-			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ content: updatedContent }),
-		})
-			.then((res) => {
-				if (!res.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return res.json();
-			})
-			.then((data) => {
-				console.log("Content saved successfully:", data);
-			})
-			.catch((error) => {
-				console.error("Error saving content:", error);
+	async function saveContent() {
+		try {
+			const updatedContent = editor.getHTML();
+			const res = await fetch(`/api/notes/${note.id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ content: updatedContent }),
 			});
+			if (!res.ok) {
+				throw new Error("Network response was not ok");
+			}
+			const data = await res.json();
+			console.log("Content saved successfully:", data);
+		} catch (error) {
+			console.error("Error saving content:", error);
+		}
 	}
 
 	onMount(() => {
+		const bubbleMenuEl = document.querySelector("#bubble-menu");
+
 		editor = new Editor({
-			// Attach the editor to the element
 			element,
 			extensions: [
 				StarterKit,
@@ -49,7 +45,7 @@
 					placeholder: "Start typing...",
 				}),
 				BubbleMenu.configure({
-					element: document.querySelector("#bubble-menu"),
+					element: bubbleMenuEl,
 					tippyOptions: {
 						duration: 200,
 						placement: "bottom",
@@ -58,10 +54,11 @@
 			],
 			content: note.content,
 			onUpdate: () => {
+				// Debounce the save operation to avoid too many network calls.
 				clearTimeout(updateTimeout);
 				updateTimeout = setTimeout(() => {
 					saveContent();
-				}, 5000);
+				}, 3000);
 			},
 		});
 	});
@@ -73,8 +70,6 @@
 
 <!-- BubbleMenu -->
 <Bubblemenu {editor} />
-<!-- Toolbar -->
-<!-- Toolbar {editor} />
 
 <!-- Editor Content -->
 <div bind:this={element} class="outline-none"></div>
