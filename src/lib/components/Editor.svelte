@@ -102,9 +102,9 @@
 				>
 					<div
 						class="h-full z-10 contain-inline-size focus:outline-none bg-transparent"
-						style="width: 680px;"
+						style="width: 980px;"
 					>
-						<TiptapEditor content={note.content} />
+						<TiptapEditor {note} />
 					</div>
 				</div>
 			</div>
