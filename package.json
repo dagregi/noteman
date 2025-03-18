@@ -36,6 +36,6 @@
 		"@tiptap/extension-underline": "^2.11.5",
 		"@tiptap/pm": "^2.11.5",
 		"@tiptap/starter-kit": "^2.11.5",
-		"better-sqlite3": "^11.8.1"
+		"better-sqlite3": "^11.9.1"
 	}
 }
