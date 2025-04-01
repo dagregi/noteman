@@ -30,7 +30,7 @@
 		"vitest": "^3.0.9"
 	},
 	"dependencies": {
-		"@tiptap/core": "^2.11.5",
+		"@tiptap/core": "^2.11.7",
 		"@tiptap/extension-bubble-menu": "^2.11.7",
 		"@tiptap/extension-placeholder": "^2.11.5",
 		"@tiptap/extension-underline": "^2.11.5",
